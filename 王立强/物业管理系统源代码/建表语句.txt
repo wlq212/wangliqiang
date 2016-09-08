@@ -1,0 +1,191 @@
+房产信息：
+
+小区表
+create table village(
+    vno number(10) primary key,    //小区编号
+    name varchar2(20),             //小区名
+    introduce varchar2(400),       //小区介绍
+    sno number(3),                 //管理员编号
+    admini varchar2(20),           //管理员姓名
+    num number(10),                //小区户数
+    constraint contractPK5 foreign key(sno) references stuff(sno)
+);
+insert into village values(1,'优衣库','不止可以换衣服的小区',1,'李树龙',542);
+insert into village values(2,'我的宝贝','教育孩子的小区',2,'杨家磊',472);
+
+楼栋表
+create table building(
+    bno number(10) primary key,   //楼栋编号
+    name varchar2(20),            //楼栋名
+    style varchar2(10),           //楼栋类型
+    height number(3),             //楼栋高度
+    uno number(3),                //管理员编号
+    admini varchar2(20),          //管理员姓名
+    num number(4),                //楼栋户数
+    vno number(3),                //小区编号
+    namee varchar2(20),           //小区名
+    constraint contractPK6 foreign key (uno) references use(uno),
+    constraint contractPK7 foreign key (vno) references village (vno)
+);
+insert into building values(1,'巴厘岛','别墅',3,1,'邬凯宁',2,1,'优衣库');
+insert into building values(2,'纽约','公寓',28,2,'高彩甜',20,2,'我的宝贝');
+
+房间表
+create table room(
+    rno number(10) primary key,   //房间号
+    facility varchar2(400),       //房间设施          
+    area number(3),               //房间面积
+    uno number(3),                //客户编号
+    name varchar(20),             //客户姓名
+    vno number(3),                //小区编号
+    namee varchar2(20),           //小区名
+    bno number(3),                //楼栋编号
+    nname varchar2(20),           //楼栋名
+    live varchar2(5),             //是否入住
+    constraint contractPK8 foreign key (uno) references use (uno),
+    constraint contractPK9 foreign key (vno) references village (vno),
+    constraint contractPK10 foreign key (bno) references building (bno)
+);
+insert into room values(6126,'美的空调',350,1,'邬凯宁',1,'优衣库',1,'巴厘岛','是');
+insert into room values(6120,'海尔空调',250,2,'高彩甜',2,'我的宝贝',2,'纽约','否');
+
+员工信息：
+
+个人信息表
+create table stuff(
+    sno number(10) primary key,   //员工编号
+    sname varchar2(20),           //员工姓名
+    password varchar2(16),        //密码
+    sex varchar2(3),              //性别
+    age number(3),                //年龄
+    education varchar2(20),       //学历
+    address varchar(50),          //地址
+    email varchar2(20),           //邮箱
+    phone number(13),             //电话
+    status varchar2(20),          //政治面貌
+    father varchar2(15),          //父亲
+    fworkerplace varchar2(200),   //父亲工作单位
+    mother varchar2(20),          //母亲
+    mworkerplace varchar2(200)    //母亲工作单位
+);
+insert into stuff values(1,'李树龙',13213101,'男',22,'小学生','山西省大同市','1451037220@qq.com',13247816700,'预备党员','李春雨','杰普','嘟嘟','学校');
+insert into stuff values(2,'杨家磊',13213123,'男',20,'本科','江西省吉安市','107152181@qq.com',18779868309,'团员','杨阳洋','爸爸去哪儿','酷酷','江西理工大学');
+
+合同表
+create table contract(
+    cno number(10) primary key,  //合同编号
+    content varchar2(400),       //内容合同
+    begintime varchar2(30),      //生效时间              
+    time number(3),              //有效期
+    sno number(10),              //员工编号
+    name varchar2(20),           //员工姓名
+    constraint contractPK1 foreign key(sno) references stuff(sno)
+);
+insert into contract values(1,'终身奴役，否则灵车漂移','20120403',10,1,'李树龙');
+insert into contract values(2,'不听话就打死','20100821',50,2,'杨家磊');
+
+考核表
+create table assess(
+    ano number(10) primary key,  //考核编号
+    content varchar2(400),       //考核内容
+    time varchar2(30),           //考核时间
+    sno number(10),              //员工编号
+    name varchar2(20),          //员工姓名
+    rank varchar2(15),           //考核等级
+    constraint contractPK2 foreign key(sno) references stuff(sno)
+);
+insert into assess values(1,'洗厕所','20130503',2,'杨家磊','A');
+insert into assess values(2,'洗澡','20150715',1,'李树龙','Z');
+
+培训表
+create table train(
+    tno number(10) primary key,  //培训编号
+    content varchar2(400),       //培训内容
+    time varchar2(30),           //培训时间
+    sno number(3),               //员工编号
+    name varchar2(20),           //员工姓名
+    behave varchar2(15),         //表现
+    constraint contractPK3 foreign key(sno) references stuff(sno)
+);
+insert into train values(1,'洗厕所','20120627',2,'杨家磊','洗的很干净');
+insert into train values(2,'洗澡','20150715',1,'李树龙','不合格');
+
+离职表
+create table leave(
+    lno number(10) primary key,   //离职编号 
+    reason varchar2(400),         //离职原因
+    time varchar2(50),            //离职时间
+    sno number(3),                //员工编号
+    name varchar2(20),            //员工姓名
+    constraint contractPK4 foreign key(sno) references stuff(sno)
+);
+insert into leave values(1,'酷酷呼叫玩2K','20140324',2,'杨家磊');
+insert into leave values(2,'程萌萌约他去旅游','20150723',1,'李树龙');
+
+客户信息：
+
+个人信息表
+create table use(
+    uno number(10) primary key,  //客户编号
+    uname varchar2(20),          //客户姓名
+    password varchar2(16),       //密码
+    sex varchar2(3),             //性别
+    age number(3),               //年龄
+    carid varchar2(15),          //汽车类型
+    pet varchar2(30),            //宠物
+    phone number(13),            //电话
+    father varchar2(15),         //父亲
+    mother varchar2(20)          //母亲
+);
+insert into use values(1,'邬凯宁',13213113,'男',21,'奥拓','中华田园犬',18007093573,'李树龙','刘敏');
+insert into use values(2,'高彩甜',13213116,'男',21,'男','土拨鼠',15779721278,'高老庄','高圆圆');
+
+购租房信息表
+create table bhouse(
+    bhno number(10) primary key,  //订单编号
+    rno number(10),               //房间号
+    time varchar2(20),            //时间
+    style varchar2(10),           //购租类型
+    retur varchar2(5),            //是否退房
+    constraint contractPK11 foreign key (rno) references room (rno)
+);
+insert into bhouse values(1,6126,'20130215','购房','否');
+insert into bhouse values(2,6120,'2010523','租房','是');
+
+维修表
+create table repair(
+    rpno number(10) primary key,   //维修单号
+    rno number(10),                //房间号
+    content varchar2(400),         //维修内容
+    price number(10),              //费用
+    time varchar2(20),             //维修时间
+    constraint contractPK12 foreign key (rno) references room (rno)
+);
+insert into repair values(1,6126,'电灯接触不良',238,'20120216');
+insert into repair values(2,6120,'马桶堵塞',356,'20070416');
+
+欠费表
+create table debt(
+    dno number(10) primary key,   //欠费单号
+    rno number(10),               //房间号
+    price number(4),              //费用
+    time varchar2(20),            //时间
+    pay varchar2(10),             //是否支付
+    constraint contractPK13 foreign key (rno) references room (rno)
+);
+insert into debt values(1,6126,150,'20120627','是');
+insert into debt values(2,6120,236,'20050902','否');
+
+投诉建议：
+
+投诉建议表
+create table complaint(
+    cono number(10) primary key,   //投诉单号
+    uno number(3),                //客户编号
+    name varchar2(20),            //客户姓名
+    content varchar2(20),         //投诉内容
+    time varchar2(20),            //时间
+    constraint contractPK14 foreign key (uno) references use (uno)
+);
+insert into complaint values(1,1,'邬凯宁','墙体雨天渗水','20040806');
+insert into complaint values(2,2,'高彩甜','路面坑洼不平','20100121');
